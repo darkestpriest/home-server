@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
@@ -31,15 +33,15 @@ public class Application implements CommandLineRunner {
     public void run(String... strings) throws Exception {
         //Init database
         log.info("Init database");
-        HomeServerDao homeServerDao = new HomeServerDao(jdbcTemplate);
-        //Example
+        HomeServerDao homeServerDao = new HomeServerDao();
+        //first Data
         insertFooData(homeServerDao);
 
     }
 
     private void insertFooData(HomeServerDao homeServerDao){
-        String ip="12345";
-        String name="'Nombre XD'";
+        String ip="localhost";
+        String name="Server";
         homeServerDao.persistsHost(ip,name);
         List<Host> hostList = homeServerDao.listAllHost();
         log.info(hostList.toString());

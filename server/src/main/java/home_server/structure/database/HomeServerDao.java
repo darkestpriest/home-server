@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -22,23 +23,23 @@ public class HomeServerDao {
 
     private static final Logger log = LoggerFactory.getLogger(HomeServerDao.class);
 
-    JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
 
     /**
      * Default constructor.
      */
-    public HomeServerDao(JdbcTemplate jdbcTemplate){
+    public HomeServerDao(){
         log.info("Init Dao");
-        this.jdbcTemplate = jdbcTemplate;
+        DataSourceConfig dataSourceConfig = new DataSourceConfig();
+        this.jdbcTemplate = new JdbcTemplate(dataSourceConfig.dataSource());
         initDatabase();
     }
 
     /**
      * This method initializes the server database
      */
-    private void initDatabase(){
+    public void initDatabase(){
         log.info("Creating tables");
-
         jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS hosts(" +
                 "id SERIAL, ip VARCHAR(255), name VARCHAR(255))");
     }
@@ -52,10 +53,10 @@ public class HomeServerDao {
         log.info(String.format(
                 "Inserting Host[ip='%s', name='%s']",
                  ip, name));
-        List<Object[]> record = new ArrayList<>();
-        record.add(new String[]{ip,name});
-        //jdbcTemplate.update("INSERT INTO hosts(ip, name) VALUES (?,?)", ip, name);
-        jdbcTemplate.batchUpdate("INSERT INTO hosts(ip, name) VALUES (?,?)", record);
+        //List<Object[]> record = new ArrayList<>();
+        //record.add(new String[]{ip,name});
+        jdbcTemplate.update("INSERT INTO hosts(ip, name) VALUES (?,?)", ip, name);
+        //jdbcTemplate.batchUpdate("INSERT INTO hosts(ip, name) VALUES (?,?)", record);
         log.info(jdbcTemplate.getDataSource().toString());
     }
 
@@ -71,4 +72,11 @@ public class HomeServerDao {
         );
     }
 
+    public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public JdbcTemplate getJdbcTemplate() {
+        return jdbcTemplate;
+    }
 }
