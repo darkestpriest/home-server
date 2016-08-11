@@ -1,5 +1,7 @@
 package home_server.structure.database.entities;
 
+import home_server.structure.util.JsonParser;
+
 /**
  * Created by Manuel Perez P. (darkpriestrelative@gmail.com) on 11/08/16.
  */
@@ -33,6 +35,24 @@ public class Host {
         this.id = id;
         this.ip = ip;
         this.name = name;
+    }
+
+    public Host(){}
+
+    public long getId() {
+        return id;
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public static Host fromJson(String jsonString){
+        return new JsonParser<Host>(jsonString).parseToObject(Host.class);
     }
 
     @Override

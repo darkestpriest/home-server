@@ -42,6 +42,9 @@ public class HomeServerDao {
         log.info("Creating tables");
         jdbcTemplate.execute("CREATE TABLE IF NOT EXISTS hosts(" +
                 "id SERIAL, ip VARCHAR(255), name VARCHAR(255))");
+        String ip="localhost";
+        String name="Server";
+        persistsHost(ip,name);
     }
 
     /**
@@ -60,6 +63,15 @@ public class HomeServerDao {
         log.info(jdbcTemplate.getDataSource().toString());
     }
 
+    public void persistHost(Host host){
+        log.info(String.format(
+                "Inserting Host['%s']",
+                host));
+        List<Object[]> record = new ArrayList<>();
+        record.add(new String[]{host.getIp(), host.getName()});
+        jdbcTemplate.batchUpdate("INSERT INTO hosts(ip, name) VALUES (?,?)", record);
+    }
+
     /**
      * This method returns a list of host recorded in database
      * @return
@@ -70,6 +82,22 @@ public class HomeServerDao {
                 "SELECT id, ip, name FROM hosts ",
                 (rs, rowNum) -> new Host(rs.getLong("id"), rs.getString("ip"), rs.getString("name"))
         );
+    }
+
+    public Host getByIp(String ip){
+        return getByParameter("ip",ip);
+    }
+
+    public Host getByName(String name){
+        return getByParameter("name",name);
+    }
+
+    private Host getByParameter(String parameter, String value){
+        Host host = jdbcTemplate.queryForObject(
+                "SELECT id, ip, name FROM hosts WHERE "+parameter+" = ?", new Object[] { value },
+                (rs, rowNum) -> new Host(rs.getLong("id"), rs.getString("ip"), rs.getString("name"))
+        );
+        return host;
     }
 
     public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {

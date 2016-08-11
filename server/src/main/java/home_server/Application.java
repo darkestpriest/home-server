@@ -35,16 +35,16 @@ public class Application implements CommandLineRunner {
         log.info("Init database");
         HomeServerDao homeServerDao = new HomeServerDao();
         //first Data
-        insertFooData(homeServerDao);
+        //insertFooData(homeServerDao);
+        //homeServerDao.persistsHost("1234","name");
+        //log.info(homeServerDao.getByIp("localhost").toString());
 
     }
 
     private void insertFooData(HomeServerDao homeServerDao){
-        String ip="localhost";
-        String name="Server";
+        String ip="foo";
+        String name="test-name";
         homeServerDao.persistsHost(ip,name);
-        List<Host> hostList = homeServerDao.listAllHost();
-        log.info(hostList.toString());
     }
 
 }
