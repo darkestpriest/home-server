@@ -1,0 +1,28 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:if="${message}">
+    <h2 th:text="${message}"/>
+</div>
+
+<div>
+    <form method="POST" enctype="multipart/form-data" action="/">
+        <table>
+            <tr><td>Insert Host:</td></tr>
+            <tr><td>IP</td><td><input type="text" id="ip" /></td></tr>
+            <tr><td>Name</td><td><input type="text" id="name" /></td></tr>
+        </table>
+    </form>
+</div>
+
+<div>
+    Host List
+    <ul>
+        <li th:each="host : ${hosts}">
+            <a th:href="${host.href}" th:text="${host.rel}" />
+        </li>
+    </ul>
+</div>
+
+</body>
+</html>
