@@ -1,0 +1,17 @@
+*.iml
+
+*.ipr
+
+*.iws
+
+local.properties
+
+.idea/
+
+.gradle
+
+build/
+
+out/
+
+log/
